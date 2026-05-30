@@ -33,3 +33,5 @@ else:
     users_collection = None
     blood_requests_collection = None
     donors_collection = None
+
+requests_collection = blood_requests_collection
