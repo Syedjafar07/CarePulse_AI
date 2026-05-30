@@ -1,0 +1,9 @@
+flask
+flask-cors
+pymongo
+python-dotenv
+google-genai
+twilio
+PyJWT
+bcrypt
+requests

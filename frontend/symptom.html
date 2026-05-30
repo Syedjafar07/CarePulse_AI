@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CarePulse AI — Health Assistant</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="assets/logo.png">
+  <style>
+    /* ── FULL-PAGE CHAT LAYOUT ── */
+    body { background: #f7f8fc; }
+    .chat-page { display: flex; height: 100vh; overflow: hidden; }
+
+    /* Sidebar unchanged — inherited from style.css */
+
+    /* Main chat area */
+    .chat-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+      background: #f7f8fc;
+    }
+
+    /* Top bar */
+    .chat-topbar {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 28px;
+      background: #fff;
+      border-bottom: 1px solid #f0f0f0;
+      flex-shrink: 0;
+    }
+    .chat-ai-icon {
+      width: 42px; height: 42px;
+      background: linear-gradient(135deg, #e53935, #b71c1c);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
+    }
+    .chat-ai-name { font-size: 16px; font-weight: 700; color: #1a1a2e; }
+    .chat-ai-status {
+      font-size: 12px; color: #22c55e;
+      display: flex; align-items: center; gap: 5px;
+    }
+    .chat-ai-status::before {
+      content: ""; width: 7px; height: 7px;
+      background: #22c55e; border-radius: 50%; display: inline-block;
+    }
+    .chat-topbar-actions { margin-left: auto; display: flex; gap: 8px; }
+    .chat-topbar-btn {
+      padding: 7px 14px; border-radius: 8px;
+      border: 1px solid #e8e8e8; background: #fafafa;
+      font-size: 12px; color: #555; cursor: pointer;
+      font-family: inherit; transition: all 0.2s;
+    }
+    .chat-topbar-btn:hover { background: #fff0f0; border-color: #e53935; color: #e53935; }
+
+    /* Disclaimer */
+    .chat-disclaimer {
+      background: #fff8e1;
+      border-bottom: 1px solid #ffe082;
+      padding: 8px 28px;
+      font-size: 12px;
+      color: #795548;
+      flex-shrink: 0;
+    }
+
+    /* Messages scroll area */
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      scroll-behavior: smooth;
+    }
+    .chat-messages::-webkit-scrollbar { width: 6px; }
+    .chat-messages::-webkit-scrollbar-track { background: transparent; }
+    .chat-messages::-webkit-scrollbar-thumb { background: #ddd; border-radius: 3px; }
+
+    /* Message rows */
+    .msg-row { display: flex; gap: 12px; max-width: 780px; }
+    .msg-row.user { flex-direction: row-reverse; margin-left: auto; max-width: 70%; }
+
+    /* Avatars */
+    .msg-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0; margin-top: 2px;
+    }
+    .msg-row.ai .msg-icon {
+      background: linear-gradient(135deg, #e53935, #b71c1c);
+    }
+    .msg-row.user .msg-icon {
+      background: #e8e8e8;
+    }
+
+    /* Bubbles */
+    .msg-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+    .msg-bubble {
+      padding: 14px 18px;
+      border-radius: 16px;
+      font-size: 14px;
+      line-height: 1.7;
+      word-break: break-word;
+    }
+    .msg-row.ai .msg-bubble {
+      background: #fff;
+      color: #1a1a2e;
+      border-bottom-left-radius: 4px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .msg-row.user .msg-bubble {
+      background: linear-gradient(135deg, #e53935, #c62828);
+      color: #fff;
+      border-bottom-right-radius: 4px;
+    }
+    .msg-time { font-size: 11px; color: #aaa; padding: 0 4px; }
+    .msg-row.user .msg-time { text-align: right; }
+
+    /* Markdown-like formatting */
+    .msg-bubble strong { font-weight: 700; }
+    .msg-bubble ul { margin: 8px 0; padding-left: 18px; }
+    .msg-bubble li { margin: 4px 0; }
+
+    /* Typing indicator */
+    .typing-bubble {
+      background: #fff;
+      padding: 14px 20px;
+      border-radius: 16px;
+      border-bottom-left-radius: 4px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      display: flex; gap: 5px; align-items: center;
+    }
+    .typing-dot {
+      width: 8px; height: 8px;
+      background: #ccc; border-radius: 50%;
+      animation: typingBounce 1.2s infinite;
+    }
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes typingBounce {
+      0%, 80%, 100% { transform: translateY(0); background: #ccc; }
+      40% { transform: translateY(-6px); background: #e53935; }
+    }
+
+    /* Quick prompts */
+    .quick-prompts {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      padding: 0 0 4px 48px;
+    }
+    .qp-btn {
+      padding: 7px 14px; border-radius: 20px;
+      border: 1.5px solid #e8e8e8;
+      background: #fff; color: #555;
+      font-size: 12px; cursor: pointer;
+      font-family: inherit; transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .qp-btn:hover { border-color: #e53935; color: #e53935; background: #fff5f5; }
+
+    /* Input bar */
+    .chat-input-area {
+      padding: 16px 28px 20px;
+      background: #fff;
+      border-top: 1px solid #f0f0f0;
+      flex-shrink: 0;
+    }
+    .chat-input-box {
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+      background: #f7f8fc;
+      border: 1.5px solid #e8e8e8;
+      border-radius: 14px;
+      padding: 10px 14px;
+      transition: border-color 0.2s;
+    }
+    .chat-input-box:focus-within { border-color: #e53935; background: #fff; }
+    .chat-textarea {
+      flex: 1;
+      border: none; background: transparent;
+      font-size: 14px; font-family: inherit;
+      color: #1a1a2e; resize: none;
+      max-height: 120px; min-height: 22px;
+      outline: none; line-height: 1.5;
+    }
+    .chat-textarea::placeholder { color: #aaa; }
+    .input-actions { display: flex; gap: 6px; align-items: center; flex-shrink: 0; }
+    .voice-btn-new {
+      width: 34px; height: 34px; border-radius: 8px;
+      border: 1px solid #e8e8e8; background: #fff;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 15px; transition: all 0.2s;
+    }
+    .voice-btn-new:hover { background: #fff5f5; border-color: #e53935; }
+    .voice-btn-new.recording { background: #e53935; border-color: #e53935; animation: pulse 1s infinite; }
+    .send-btn-new {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: linear-gradient(135deg, #e53935, #c62828);
+      border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s; flex-shrink: 0;
+    }
+    .send-btn-new:hover { transform: scale(1.05); box-shadow: 0 3px 10px rgba(229,57,53,0.35); }
+    .send-btn-new:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .send-btn-new svg { fill: #fff; }
+    .input-hint {
+      font-size: 11px; color: #bbb; margin-top: 6px;
+      text-align: center; letter-spacing: 0.2px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .chat-messages { padding: 16px; }
+      .chat-input-area { padding: 12px 16px 16px; }
+      .chat-topbar { padding: 12px 16px; }
+      .chat-disclaimer { padding: 7px 16px; }
+      .msg-row { max-width: 100%; }
+      .msg-row.user { max-width: 85%; }
+      .quick-prompts { padding-left: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <img src="assets/logo.png" alt="CarePulse AI">
+    <span class="sidebar-logo-text">Care<span>Pulse</span></span>
+  </div>
+  <nav class="sidebar-nav">
+    <button class="nav-item" onclick="location.href='dashboard.html'">Dashboard</button>
+    <button class="nav-item" onclick="location.href='request.html'">Blood Requests</button>
+    <button class="nav-item" onclick="location.href='donor-portal.html'">Donor Portal</button>
+    <button class="nav-item" onclick="location.href='hospitals.html'">Hospitals</button>
+    <button class="nav-item active" onclick="location.href='symptom.html'">AI Symptom Checker</button>
+    <button class="nav-item" onclick="location.href='profile.html'">Profile</button>
+    <button class="nav-item" onclick="logout()">Logout</button>
+  </nav>
+  <div class="sidebar-donate-card">
+    <h4>Health Tips</h4>
+    <p>Stay hydrated and eat iron-rich foods before donating blood.</p>
+    <button class="sidebar-donate-btn" onclick="clearChat()">New Chat</button>
+  </div>
+</aside>
+
+<div class="main-content" style="padding:0;display:flex;flex-direction:column;height:100vh;overflow:hidden;">
+
+  <!-- TOP BAR -->
+  <div class="chat-topbar">
+    <div class="chat-ai-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/></svg>
+    </div>
+    <div>
+      <div class="chat-ai-name">CarePulse Health Assistant</div>
+      <div class="chat-ai-status">Online — Ready to help</div>
+    </div>
+    <div class="chat-topbar-actions">
+      <button class="chat-topbar-btn" onclick="clearChat()">New Chat</button>
+    </div>
+  </div>
+
+  <!-- DISCLAIMER -->
+  <div class="chat-disclaimer">
+    CarePulse AI is not a replacement for professional medical advice. Always consult a qualified doctor for diagnosis and treatment.
+  </div>
+
+  <!-- MESSAGES -->
+  <div class="chat-messages" id="chat-messages">
+    <div class="msg-row ai" id="welcome-msg">
+      <div class="msg-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+      </div>
+      <div class="msg-body">
+        <div class="msg-bubble">
+          Hello! I'm the CarePulse AI Health Assistant.<br><br>
+          I can help you with:<br>
+          <strong>Physical symptoms</strong> — fever, pain, headache, and more<br>
+          <strong>Mental wellness</strong> — stress, anxiety, sleep issues<br>
+          <strong>Blood donation</strong> — eligibility, process, and tips<br><br>
+          How are you feeling today? Describe your symptoms and I'll help.
+        </div>
+        <div class="msg-time">Now</div>
+      </div>
+    </div>
+
+    <div class="quick-prompts" id="quick-prompts">
+      <button class="qp-btn" onclick="sendQuick('I have fever and headache since yesterday')">Fever &amp; Headache</button>
+      <button class="qp-btn" onclick="sendQuick('I am feeling stressed and anxious')">Stress &amp; Anxiety</button>
+      <button class="qp-btn" onclick="sendQuick('I have chest pain and shortness of breath')">Chest Pain</button>
+      <button class="qp-btn" onclick="sendQuick('Am I eligible to donate blood?')">Donate Blood?</button>
+      <button class="qp-btn" onclick="sendQuick('I have been having trouble sleeping')">Sleep Issues</button>
+    </div>
+  </div>
+
+  <!-- INPUT AREA -->
+  <div class="chat-input-area">
+    <div class="chat-input-box">
+      <textarea class="chat-textarea" id="chat-input" placeholder="Describe your symptoms or ask a health question..." rows="1"
+        onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+      <div class="input-actions">
+        <button class="voice-btn-new" id="voice-btn" onclick="toggleVoice()" title="Voice input">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+        </button>
+        <button class="send-btn-new" id="send-btn" onclick="sendMessage()">
+          <svg width="16" height="16" viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2L15 22l-4-9-9-4 20-7z" fill="#fff"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="input-hint">CarePulse AI · Not a medical diagnosis</div>
+  </div>
+
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <button class="bnav-item" onclick="location.href='dashboard.html'">Home</button>
+    <button class="bnav-item" onclick="location.href='donor-portal.html'">Donors</button>
+    <button class="bnav-item bnav-sos" onclick="location.href='request.html'">SOS</button>
+    <button class="bnav-item active" onclick="location.href='symptom.html'">AI Chat</button>
+    <button class="bnav-item" onclick="location.href='profile.html'">Profile</button>
+  </div>
+</nav>
+
+<script src="js/app.js"></script>
+<script>
+let chatHistory = [];
+let isRecording = false;
+let recognition = null;
+let isSending = false;
+
+document.addEventListener("DOMContentLoaded", () => {
+  requireAuth();
+  setupSpeech();
+});
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}
+
+function sendQuick(text) {
+  document.getElementById('chat-input').value = text;
+  // hide quick prompts after first use
+  document.getElementById('quick-prompts').style.display = 'none';
+  sendMessage();
+}
+
+async function sendMessage() {
+  if (isSending) return;
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text) return;
+
+  isSending = true;
+  document.getElementById('send-btn').disabled = true;
+  input.value = '';
+  input.style.height = 'auto';
+  document.getElementById('quick-prompts').style.display = 'none';
+
+  appendMsg('user', text);
+  chatHistory.push({ role: 'user', content: text });
+
+  showTyping();
+  const { ok, data } = await apiCall('/ai/chat', 'POST', {
+    message: text,
+    history: chatHistory.slice(-8)
+  });
+  hideTyping();
+
+  const reply = ok ? data.response : "I'm having trouble connecting right now. Please try again.";
+  appendMsg('ai', formatResponse(reply));
+  chatHistory.push({ role: 'model', content: reply });
+
+  isSending = false;
+  document.getElementById('send-btn').disabled = false;
+  input.focus();
+}
+
+function formatResponse(text) {
+  // Convert **bold** to <strong>
+  text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  // Convert *italic*
+  text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
+  // Convert bullet lines starting with - or •
+  text = text.replace(/^[-•]\s+(.+)$/gm, '<li>$1</li>');
+  text = text.replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>');
+  // Convert newlines to <br>
+  text = text.replace(/\n/g, '<br>');
+  return text;
+}
+
+function appendMsg(role, html) {
+  const container = document.getElementById('chat-messages');
+  const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const isUser = role === 'user';
+  const div = document.createElement('div');
+  div.className = `msg-row ${role}`;
+  div.innerHTML = `
+    <div class="msg-icon">
+      ${isUser
+        ? '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>'
+        : '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>'
+      }
+    </div>
+    <div class="msg-body">
+      <div class="msg-bubble">${html}</div>
+      <div class="msg-time">${now}</div>
+    </div>`;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+function showTyping() {
+  const container = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = 'msg-row ai'; div.id = 'typing-row';
+  div.innerHTML = `
+    <div class="msg-icon">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+    </div>
+    <div class="msg-body">
+      <div class="typing-bubble">
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+      </div>
+    </div>`;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+function hideTyping() {
+  document.getElementById('typing-row')?.remove();
+}
+
+function clearChat() {
+  chatHistory = [];
+  const container = document.getElementById('chat-messages');
+  container.innerHTML = '';
+  // Re-add welcome
+  const welcome = document.createElement('div');
+  welcome.className = 'msg-row ai';
+  welcome.innerHTML = `
+    <div class="msg-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div>
+    <div class="msg-body">
+      <div class="msg-bubble">Chat cleared. How can I help you today?</div>
+      <div class="msg-time">Now</div>
+    </div>`;
+  container.appendChild(welcome);
+  // Re-add quick prompts
+  const qp = document.createElement('div');
+  qp.className = 'quick-prompts'; qp.id = 'quick-prompts';
+  qp.innerHTML = `
+    <button class="qp-btn" onclick="sendQuick('I have fever and headache since yesterday')">Fever & Headache</button>
+    <button class="qp-btn" onclick="sendQuick('I am feeling stressed and anxious')">Stress & Anxiety</button>
+    <button class="qp-btn" onclick="sendQuick('I have chest pain')">Chest Pain</button>
+    <button class="qp-btn" onclick="sendQuick('Am I eligible to donate blood?')">Donate Blood?</button>`;
+  container.appendChild(qp);
+}
+
+function setupSpeech() {
+  if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) return;
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  recognition = new SR();
+  recognition.continuous = false;
+  recognition.interimResults = false;
+  recognition.lang = 'en-IN';
+  recognition.onresult = (e) => {
+    document.getElementById('chat-input').value = e.results[0][0].transcript;
+    stopVoice();
+    sendMessage();
+  };
+  recognition.onerror = () => { stopVoice(); showToast('Voice input failed', 'error'); };
+  recognition.onend = () => stopVoice();
+}
+
+function toggleVoice() {
+  if (isRecording) { stopVoice(); return; }
+  if (!recognition) { showToast('Voice not supported in this browser', 'error'); return; }
+  isRecording = true;
+  const btn = document.getElementById('voice-btn');
+  btn.classList.add('recording');
+  recognition.start();
+  showToast('Listening... Speak now', 'info');
+}
+
+function stopVoice() {
+  isRecording = false;
+  document.getElementById('voice-btn').classList.remove('recording');
+  try { recognition?.stop(); } catch {}
+}
+</script>
+</body>
+</html>

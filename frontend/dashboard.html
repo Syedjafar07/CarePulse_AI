@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CarePulse AI — Dashboard</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="assets/logo.png">
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <img src="assets/logo.png" alt="CarePulse AI">
+    <span class="sidebar-logo-text">Care<span>Pulse</span></span>
+  </div>
+  <nav class="sidebar-nav">
+    <button class="nav-item active" onclick="location.href='dashboard.html'">
+      <svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Dashboard
+    </button>
+    <button class="nav-item" onclick="location.href='request.html'">
+      <svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      Blood Requests
+    </button>
+    <button class="nav-item" onclick="location.href='donor-portal.html'">
+      <svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Find Donors
+    </button>
+    <button class="nav-item" onclick="location.href='hospitals.html'">
+      <svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Hospitals
+    </button>
+    <button class="nav-item" onclick="location.href='symptom.html'">
+      <svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+      AI Symptom Checker
+    </button>
+    <button class="nav-item" onclick="location.href='donor-portal.html'">
+      <svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      SOS Alerts
+      <span class="nav-badge" id="alert-count">0</span>
+    </button>
+    <button class="nav-item" onclick="location.href='profile.html'">
+      <svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Profile
+    </button>
+    <button class="nav-item" onclick="logout()">
+      <svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Logout
+    </button>
+  </nav>
+  <div class="sidebar-donate-card">
+    <h4>Every Drop Counts</h4>
+    <p>Your donation can save multiple lives. Be a hero today.</p>
+    <button class="sidebar-donate-btn" onclick="location.href='request.html'">Become a Donor →</button>
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<div class="main-content">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <h2>Good morning,</h2>
+      <h3>
+        <span id="user-name">Loading...</span>
+        <span class="verified-badge" style="display:none;">&#10003; Verified Donor</span>
+      </h3>
+    </div>
+    <div class="topbar-right">
+      <button class="topbar-icon-btn" onclick="location.href='donor-portal.html'">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span class="topbar-badge" id="notif-count">0</span>
+      </button>
+      <button class="topbar-location" id="location-btn">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <span id="location-text">Detecting...</span>
+      </button>
+      <div class="topbar-user" onclick="location.href='profile.html'">
+        <div class="topbar-avatar" id="user-avatar">
+          <img id="user-avatar-img" src="" alt="" style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:none;">
+          <span id="user-avatar-initials">?</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD BODY -->
+  <div class="dashboard-body">
+    <div class="dash-grid">
+
+      <!-- SOS BANNER -->
+      <div class="sos-banner">
+        <div class="sos-info">
+          <div class="sos-heartbeat">
+            <svg width="80" height="30" viewBox="0 0 80 30"><polyline points="0,15 15,15 20,5 25,25 30,10 35,20 40,15 80,15" fill="none" stroke="#e53935" stroke-width="2.5"/></svg>
+          </div>
+          <h3>In Emergency?</h3>
+          <p>Press the SOS button and we'll alert nearby verified donors instantly.</p>
+        </div>
+        <div class="sos-center">
+          <div class="sos-loc-card">
+            <div class="sos-loc-label">Your Location</div>
+            <div class="sos-loc-val" id="sos-location">Detecting...</div>
+            <div class="sos-loc-acc">
+              <span class="sos-loc-dot"></span> Accuracy: High
+            </div>
+          </div>
+          <div class="sos-btn-wrap">
+            <button class="sos-big-btn" onclick="handleSOS()">
+              <span class="sos-text">SOS</span>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.16 6.16l1.27-.84a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              <span class="sos-sub">Tap for Help</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI CHECKER CARD -->
+      <div class="ai-checker-card dash-card">
+        <div class="ai-checker-header">
+          <span class="ai-badge">AI</span>
+          <h3>AI Symptom Checker</h3>
+        </div>
+        <p>Describe your symptoms and get AI-powered healthcare suggestions instantly.</p>
+        <div class="ai-checker-footer">
+          <button class="ai-check-btn" onclick="location.href='symptom.html'">
+            Check Symptoms →
+          </button>
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#e53935" stroke-width="1.5" opacity="0.4"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        </div>
+      </div>
+
+      <!-- AVAILABLE TO DONATE TOGGLE -->
+      <div class="dash-card">
+        <div class="toggle-card">
+          <div class="toggle-info">
+            <h4>Available to Donate</h4>
+            <p id="toggle-status-text">Turn on to receive SOS alerts</p>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="donate-toggle" onchange="toggleDonate()">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- SMART DONOR MATCH -->
+      <div class="dash-card">
+        <div class="dash-card-header">
+          <span class="dash-card-title">Smart Donor Match</span>
+          <a class="dash-card-link" onclick="location.href='donor-portal.html'">View all</a>
+        </div>
+        <div class="donor-match-grid" id="donor-match-grid">
+          <div style="grid-column:1/-1;text-align:center;padding:20px;color:var(--gray-400);">
+            <div class="spinner" style="margin:0 auto 10px;"></div>
+            Loading donors...
+          </div>
+        </div>
+      </div>
+
+      <!-- EMERGENCY BLOOD REQUESTS -->
+      <div class="dash-card">
+        <div class="dash-card-header">
+          <span class="dash-card-title">Emergency Blood Requests</span>
+          <a class="dash-card-link" onclick="location.href='request.html'">View all</a>
+        </div>
+        <div class="request-list" id="request-list">
+          <div style="text-align:center;padding:20px;color:var(--gray-400);">
+            <div class="spinner" style="margin:0 auto 10px;"></div>
+            Loading requests...
+          </div>
+        </div>
+      </div>
+
+      <!-- YOUR IMPACT -->
+      <div class="dash-card">
+        <div class="dash-card-header">
+          <span class="dash-card-title">Your Impact</span>
+        </div>
+        <div class="impact-stats">
+          <div class="impact-stat">
+            <div class="impact-icon" style="width:36px;height:36px;background:var(--red-pale);border-radius:10px;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--red)"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            </div>
+            <div class="impact-num" id="stat-donations">0</div>
+            <div class="impact-label">Donations</div>
+          </div>
+          <div class="impact-stat">
+            <div class="impact-icon" style="width:36px;height:36px;background:#fce4e4;border-radius:10px;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e53935" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <div class="impact-num" id="stat-lives">0</div>
+            <div class="impact-label">Lives Saved</div>
+          </div>
+          <div class="impact-stat">
+            <div class="impact-icon" style="width:36px;height:36px;background:#e8f5e9;border-radius:10px;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#43a047" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div class="impact-num" id="stat-helped">0</div>
+            <div class="impact-label">People Helped</div>
+          </div>
+        </div>
+        <div class="impact-msg">
+          <span id="impact-msg-text">Thank you for being a lifesaver!</span>
+        </div>
+      </div>
+
+      <!-- DONOR MAP -->
+      <div class="dash-card">
+        <div class="dash-card-header">
+          <span class="dash-card-title">Donor Availability Map</span>
+          <a class="dash-card-link" onclick="location.href='hospitals.html'">View map</a>
+        </div>
+        <div class="map-preview" id="map-preview">
+          <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--gray-100);border-radius:10px;">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+        </div>
+        <div style="margin-top:10px;display:flex;align-items:center;gap:6px;font-size:13px;color:var(--gray-600);">
+          <span style="width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;"></span>
+          <span id="online-donors">Loading donors online...</span>
+        </div>
+      </div>
+
+      <!-- NEARBY HOSPITALS -->
+      <div class="dash-card">
+        <div class="dash-card-header">
+          <span class="dash-card-title">Nearby Hospitals</span>
+          <a class="dash-card-link" onclick="location.href='hospitals.html'">View all</a>
+        </div>
+        <div class="hospital-list" id="hospital-list">
+          <div style="text-align:center;padding:20px;color:var(--gray-400);">
+            <div class="spinner" style="margin:0 auto 10px;"></div>
+            Detecting nearby hospitals...
+          </div>
+        </div>
+      </div>
+
+      <!-- QUOTE BANNER -->
+      <div class="quote-banner">
+        <span class="quote-text">"Be a Hero. Save a Life. Your one act of kindness can bring a smile to someone's face."</span>
+        <button class="quote-cta" onclick="location.href='request.html'">Donate Blood →</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- BOTTOM NAV (Mobile) -->
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <button class="bnav-item active" onclick="location.href='dashboard.html'">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Home
+    </button>
+    <button class="bnav-item" onclick="location.href='donor-portal.html'">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+      Donors
+    </button>
+    <button class="bnav-item bnav-sos" onclick="handleSOS()">
+      <span style="font-size:11px;font-weight:800;color:#fff;line-height:1;">SOS</span>
+    </button>
+    <button class="bnav-item" onclick="location.href='request.html'">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      Requests
+    </button>
+    <button class="bnav-item" onclick="location.href='profile.html'">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Profile
+    </button>
+  </div>
+</nav>
+
+<!-- SOS MODAL -->
+<div class="modal-overlay hidden" id="sos-modal">
+  <div class="modal">
+    <h3 class="modal-title">Emergency Blood Request</h3>
+    <div class="form-group">
+      <label class="form-label">Blood Group Needed <span>*</span></label>
+      <select class="form-select" id="sos-blood-group">
+        <option value="">Select Blood Group</option>
+        <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+        <option>O+</option><option>O-</option><option>AB+</option><option>AB-</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Hospital Name <span>*</span></label>
+      <input type="text" class="form-input" id="sos-hospital" placeholder="e.g. Apollo Hospital">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Urgency</label>
+      <select class="form-select" id="sos-urgency">
+        <option value="critical">Critical — Immediate</option>
+        <option value="urgent">Urgent — Within 2 hours</option>
+        <option value="normal">Normal — Planned</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline btn-full" onclick="closeSOS()">Cancel</button>
+      <button class="btn btn-primary btn-full" id="sos-submit-btn" onclick="submitSOS()">Send SOS Alert</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>

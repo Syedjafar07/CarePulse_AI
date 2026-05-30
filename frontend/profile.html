@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CarePulse AI — Profile</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="assets/logo.png">
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <img src="assets/logo.png" alt="CarePulse AI">
+    <span class="sidebar-logo-text">Care<span>Pulse</span></span>
+  </div>
+  <nav class="sidebar-nav">
+    <button class="nav-item" onclick="location.href='dashboard.html'">
+      <svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Dashboard
+    </button>
+    <button class="nav-item" onclick="location.href='request.html'">
+      <svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      Blood Requests
+    </button>
+    <button class="nav-item" onclick="location.href='donor-portal.html'">
+      <svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Donor Portal
+    </button>
+    <button class="nav-item" onclick="location.href='hospitals.html'">
+      <svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Hospitals
+    </button>
+    <button class="nav-item" onclick="location.href='symptom.html'">
+      <svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+      AI Symptom Checker
+    </button>
+    <button class="nav-item active" onclick="location.href='profile.html'">
+      <svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Profile
+    </button>
+    <button class="nav-item" onclick="logout()">
+      <svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Logout
+    </button>
+  </nav>
+  <div class="sidebar-donate-card">
+    <h4>Every Drop Counts</h4>
+    <p>Keep your profile updated for better donor matching.</p>
+    <button class="sidebar-donate-btn" onclick="location.href='request.html'">Request Blood</button>
+  </div>
+</aside>
+
+<div class="main-content">
+  <div class="topbar">
+    <div class="topbar-left">
+      <h2>Account</h2>
+      <h3>My Profile</h3>
+    </div>
+    <div class="topbar-right">
+      <button class="btn btn-primary btn-sm" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <div class="dashboard-body">
+
+    <!-- PROFILE HERO -->
+    <div class="profile-hero">
+      <div class="profile-avatar-big" id="profile-avatar">
+        <img id="profile-avatar-img" src="" alt="" style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:none;">
+        <span id="profile-avatar-initials">?</span>
+      </div>
+      <div style="flex:1;">
+        <div class="profile-name" id="profile-name">Loading...</div>
+        <div class="profile-sub" id="profile-blood">Blood Group: —</div>
+        <div class="profile-tags" id="profile-tags">
+          <span class="profile-tag">Loading...</span>
+        </div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:32px;font-weight:800;" id="hero-donations">0</div>
+        <div style="font-size:13px;opacity:0.8;">Total Donations</div>
+      </div>
+    </div>
+
+    <div class="profile-grid">
+
+      <!-- PERSONAL DETAILS -->
+      <div class="dash-card">
+        <div class="dash-card-header">
+          <span class="dash-card-title">Personal Details</span>
+        </div>
+        <div id="personal-details">
+          <div style="text-align:center;padding:20px;"><div class="spinner" style="margin:0 auto;"></div></div>
+        </div>
+      </div>
+
+      <!-- DONATION STATS -->
+      <div class="dash-card">
+        <div class="dash-card-header">
+          <span class="dash-card-title">Donation Statistics</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+          <div style="text-align:center;padding:16px;background:var(--red-pale);border-radius:10px;">
+            <div style="font-size:28px;font-weight:800;color:var(--red);" id="stat-donations">0</div>
+            <div style="font-size:12px;color:var(--gray-400);">Total Donations</div>
+          </div>
+          <div style="text-align:center;padding:16px;background:#F0FFF4;border-radius:10px;">
+            <div style="font-size:28px;font-weight:800;color:var(--green);" id="stat-lives">0</div>
+            <div style="font-size:12px;color:var(--gray-400);">Lives Saved</div>
+          </div>
+        </div>
+        <div id="eligibility-card" style="background:var(--gray-100);border-radius:10px;padding:16px;">
+          <div style="font-size:13px;font-weight:600;color:var(--dark);margin-bottom:4px;">Donation Eligibility</div>
+          <div style="font-size:14px;color:var(--green);font-weight:700;" id="eligibility-status">Eligible to donate</div>
+          <div style="font-size:12px;color:var(--gray-400);margin-top:4px;" id="next-date"></div>
+        </div>
+      </div>
+
+      <!-- LOCATIONS -->
+      <div class="dash-card">
+        <div class="dash-card-header">
+          <span class="dash-card-title">My Locations</span>
+        </div>
+        <div id="locations-list">
+          <div style="text-align:center;padding:20px;color:var(--gray-400);">Loading locations...</div>
+        </div>
+      </div>
+
+      <!-- HEALTH DECLARATION -->
+      <div class="dash-card">
+        <div class="dash-card-header">
+          <span class="dash-card-title">Health Declaration</span>
+        </div>
+        <div id="health-status">
+          <div style="text-align:center;padding:20px;"><div class="spinner" style="margin:0 auto;"></div></div>
+        </div>
+        <div style="margin-top:20px;border-top:1px solid var(--gray-200);padding-top:16px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div>
+              <div style="font-size:15px;font-weight:600;color:var(--dark);">Available to Donate</div>
+              <div style="font-size:12px;color:var(--gray-400);margin-top:2px;" id="toggle-label">Loading...</div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="profile-toggle" aria-label="Toggle availability to donate" onchange="toggleFromProfile()">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- DONOR VERIFICATION -->
+      <div class="dash-card" style="grid-column: 1 / -1;">
+        <div class="dash-card-header">
+          <span class="dash-card-title">Donor Verification</span>
+        </div>
+        <p style="margin:0 0 16px;font-size:13px;color:var(--gray-400);">Upload a fitness certificate from a recognized hospital with doctor signature and official seal to become a Verified Donor.</p>
+
+        <div id="verify-status-box" style="padding:12px 16px;border-radius:10px;margin-bottom:16px;font-size:13px;font-weight:600;background:#fff8e1;color:#f39c12;border:1.5px solid #f39c12;">
+          Verification status loading...
+        </div>
+
+        <div style="border:2px dashed var(--gray-200);border-radius:12px;padding:24px;text-align:center;margin-bottom:16px;cursor:pointer;transition:var(--transition);" id="upload-zone"
+          onclick="document.getElementById('doc-upload').click()"
+          ondragover="this.style.borderColor='var(--red)'" ondragleave="this.style.borderColor='var(--gray-200)'">
+          <div style="font-size:40px;margin-bottom:10px;color:var(--gray-400);">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+          </div>
+          <div style="font-size:14px;font-weight:600;color:var(--dark);">Click to upload fitness certificate</div>
+          <div style="font-size:12px;color:var(--gray-400);margin-top:4px;">PDF, JPG, PNG accepted · Must have hospital seal + doctor signature</div>
+          <input type="file" id="doc-upload" accept=".pdf,.jpg,.jpeg,.png" style="display:none" onchange="handleDocUpload(this)">
+        </div>
+
+        <div id="doc-preview" style="display:none;margin-bottom:16px;padding:12px 16px;background:var(--gray-100);border-radius:10px;display:none;align-items:center;gap:10px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+          <div>
+            <div id="doc-name" style="font-size:13px;font-weight:600;color:var(--dark);"></div>
+            <div style="font-size:12px;color:var(--gray-400);">Ready to submit</div>
+          </div>
+        </div>
+
+        <button onclick="submitDocument()" id="verify-btn" class="btn btn-primary" style="width:100%;padding:14px;font-size:15px;">
+          Submit for Verification
+        </button>
+
+        <div style="margin-top:16px;padding:14px;background:var(--gray-100);border-radius:10px;">
+          <div style="font-size:12px;font-weight:700;color:var(--dark);margin-bottom:8px;">Requirements for Verified Donor badge:</div>
+          <div style="font-size:12px;color:var(--gray-500);line-height:2;">
+            Fitness certificate from recognized hospital<br>
+            Doctor's signature on document<br>
+            Official hospital seal / stamp<br>
+            Certificate dated within last 6 months<br>
+            Self-declared documents not accepted
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <button class="bnav-item" onclick="location.href='dashboard.html'"><span class="bicon">H</span>Home</button>
+    <button class="bnav-item" onclick="location.href='donor-portal.html'"><span class="bicon">D</span>Donors</button>
+    <button class="bnav-item bnav-sos" onclick="location.href='request.html'"><span class="bicon">SOS</span></button>
+    <button class="bnav-item" onclick="location.href='request.html'"><span class="bicon">R</span>Requests</button>
+    <button class="bnav-item active" onclick="location.href='profile.html'"><span class="bicon">P</span>Profile</button>
+  </div>
+</nav>
+
+<script src="js/app.js"></script>
+<script>
+let selectedFile = null;
+
+document.addEventListener("DOMContentLoaded", async () => {
+  requireAuth();
+  loadVerificationStatus();
+  const { ok, data } = await apiCall("/auth/profile");
+  if (!ok) return;
+
+  // Avatar
+  const img = document.getElementById('profile-avatar-img');
+  const initials = document.getElementById('profile-avatar-initials');
+  if (data.profile_photo) {
+    img.src = data.profile_photo;
+    img.style.display = 'block';
+    initials.style.display = 'none';
+  } else {
+    initials.textContent = data.name?.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2) || "?";
+    initials.style.display = 'block';
+  }
+
+  document.getElementById("profile-name").textContent = data.name;
+  document.getElementById("profile-blood").textContent = `Blood Group: ${data.blood_group}  ·  Age: ${data.age}`;
+  document.getElementById("hero-donations").textContent = data.total_donations || 0;
+
+  const tags = [
+    `${data.blood_group}`,
+    data.health_eligible ? "Eligible Donor" : "Restricted",
+    data.available_to_donate ? "Available" : "Unavailable",
+    data.verified_donor ? "Verified Donor" : ""
+  ].filter(Boolean);
+  document.getElementById("profile-tags").innerHTML = tags.map(t => `<span class="profile-tag">${t}</span>`).join("");
+
+  document.getElementById("personal-details").innerHTML = [
+    ["Full Name", data.name],
+    ["Email", data.email],
+    ["Phone", data.phone],
+    ["Blood Group", data.blood_group],
+    ["Age", `${data.age} years`],
+    ["Gender", data.gender || "Not specified"],
+  ].map(([label, val]) => `
+    <div class="detail-row">
+      <div>
+        <div class="detail-label">${label}</div>
+        <div class="detail-val">${val || "—"}</div>
+      </div>
+    </div>`).join("");
+
+  document.getElementById("stat-donations").textContent = data.total_donations || 0;
+  document.getElementById("stat-lives").textContent = data.lives_saved || 0;
+
+  if (data.cooldown_active) {
+    document.getElementById("eligibility-status").textContent = "Cooldown Active";
+    document.getElementById("eligibility-status").style.color = "var(--yellow)";
+    document.getElementById("next-date").textContent = `Next eligible: ${data.next_eligible_date?.split('T')[0] || 'N/A'}`;
+  } else if (!data.health_eligible) {
+    document.getElementById("eligibility-status").textContent = "Restricted — Health conditions";
+    document.getElementById("eligibility-status").style.color = "var(--red)";
+  }
+
+  const locs = data.locations || [];
+  document.getElementById("locations-list").innerHTML = locs.length
+    ? locs.map(l => `
+        <div style="background:var(--gray-100);border-radius:10px;padding:12px;margin-bottom:8px;">
+          <div style="font-size:11px;font-weight:700;color:var(--red);text-transform:uppercase;">${l.type === 'home' ? 'Home' : l.type === 'college' ? 'College' : 'Work'}</div>
+          <div style="font-size:13px;color:var(--dark);margin-top:4px;">${l.address}</div>
+        </div>`).join("")
+    : '<div style="text-align:center;color:var(--gray-400);padding:16px;">No locations added</div>';
+
+  const decl = data.health_declaration || {};
+  const conditions = ["hiv","hepatitis","diabetes","heart_disease","cancer","malaria_recent","tattoo_recent","pregnant"];
+  const anyCondition = conditions.some(k => decl[k]);
+  document.getElementById("health-status").innerHTML = `
+    <div style="padding:12px;border-radius:10px;background:${anyCondition ? 'var(--red-pale)' : '#F0FFF4'};border:1px solid ${anyCondition ? 'var(--red-light)' : '#C6F6D5'};">
+      <div style="font-size:14px;font-weight:700;color:${anyCondition ? 'var(--red)' : 'var(--green)'};">
+        ${anyCondition ? 'Donation Restricted' : 'Eligible to Donate'}
+      </div>
+      <div style="font-size:12px;color:var(--gray-400);margin-top:4px;">
+        ${anyCondition ? 'You declared health conditions that restrict donation.' : 'No health conditions declared. You can donate blood.'}
+      </div>
+    </div>`;
+
+  const toggle = document.getElementById("profile-toggle");
+  toggle.checked = data.available_to_donate;
+  document.getElementById("toggle-label").textContent = data.available_to_donate ? "You will receive SOS alerts" : "Turn on to receive SOS alerts";
+  if (data.cooldown_active || !data.health_eligible) toggle.disabled = true;
+});
+
+async function toggleFromProfile() {
+  const toggle = document.getElementById("profile-toggle");
+  const { ok, data } = await apiCall("/auth/toggle-donate", "POST");
+  if (ok) {
+    toggle.checked = data.available_to_donate;
+    document.getElementById("toggle-label").textContent = data.available_to_donate ? "You will receive SOS alerts" : "Turn on to receive SOS alerts";
+    showToast(data.available_to_donate ? "Now available to donate!" : "Availability turned off", data.available_to_donate ? "success" : "info");
+  } else {
+    toggle.checked = !toggle.checked;
+    showToast(data.error, "error");
+  }
+}
+
+async function loadVerificationStatus() {
+  const { ok, data } = await apiCall('/auth/verification-status');
+  if (!ok) return;
+  const box = document.getElementById('verify-status-box');
+  const status = data.verification_status;
+  if (status === 'not_uploaded') {
+    box.style.cssText = 'padding:12px 16px;border-radius:10px;margin-bottom:16px;font-size:13px;font-weight:600;background:#fff8e1;color:#f39c12;border:1.5px solid #f39c12;';
+    box.textContent = 'Not verified — upload your fitness certificate to become a Verified Donor';
+  } else if (status === 'pending') {
+    box.style.cssText = 'padding:12px 16px;border-radius:10px;margin-bottom:16px;font-size:13px;font-weight:600;background:#e3f2fd;color:#1565c0;border:1.5px solid #1565c0;';
+    box.innerHTML = `Document submitted: <strong>${data.document?.filename || 'uploaded'}</strong> — Pending AI review`;
+  } else if (status === 'verified') {
+    box.style.cssText = 'padding:12px 16px;border-radius:10px;margin-bottom:16px;font-size:13px;font-weight:600;background:#e8f5e9;color:#2e7d32;border:1.5px solid #2e7d32;';
+    box.innerHTML = '<strong>Verified Donor</strong> — Your fitness certificate has been approved!';
+  }
+}
+
+function handleDocUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) { showToast('File too large. Max 5MB.', 'error'); return; }
+  selectedFile = file;
+  document.getElementById('doc-name').textContent = file.name;
+  document.getElementById('doc-preview').style.display = 'flex';
+  document.getElementById('upload-zone').style.borderColor = 'var(--red)';
+  showToast('File selected: ' + file.name, 'info');
+}
+
+async function submitDocument() {
+  if (!selectedFile) { showToast('Please select a document first', 'error'); return; }
+  const btn = document.getElementById('verify-btn');
+  btn.textContent = 'Analyzing document...'; btn.disabled = true;
+  const reader = new FileReader();
+  reader.onload = async function(e) {
+    const base64 = e.target.result.split(',')[1];
+    const { ok, data } = await apiCall('/auth/upload-document', 'POST', {
+      document: base64,
+      filename: selectedFile.name,
+      doc_type: 'fitness_certificate',
+      mime_type: selectedFile.type || 'image/jpeg'
+    });
+    btn.textContent = 'Submit for Verification'; btn.disabled = false;
+    if (ok) {
+      showToast(data.message, data.verified ? 'success' : 'info');
+      loadVerificationStatus();
+    } else {
+      showToast(data.error || 'Upload failed', 'error');
+    }
+  };
+  reader.readAsDataURL(selectedFile);
+}
+</script>
+</body>
+</html>
