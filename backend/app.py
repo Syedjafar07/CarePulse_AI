@@ -13,8 +13,6 @@ app = Flask(__name__, static_folder="../frontend")
 CORS(app)
 app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY", "carepulse_secret_2026")
 
-from models.db import test_connection
-test_connection()
 
 from routes.auth import auth_bp
 from routes.blood import blood_bp
