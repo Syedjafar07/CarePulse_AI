@@ -990,3 +990,88 @@ input, select, textarea { font-family: inherit; }
   font-size: 11px;
   padding: 8px;
 }
+/* ── MOBILE FIXES ── */
+@media (max-width: 768px) {
+  .main-content { margin-left: 0 !important; }
+  .sidebar { display: none !important; }
+  .bottom-nav { display: block !important; }
+  .dashboard-body { padding: 12px !important; }
+
+  .topbar {
+    padding: 10px 12px !important;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .topbar-left h2 { font-size: 11px !important; }
+  .topbar-left h3 { font-size: 16px !important; }
+  .verified-badge {
+    display: block !important;
+    margin-left: 0 !important;
+    margin-top: 4px;
+    font-size: 10px !important;
+    padding: 2px 8px !important;
+  }
+  .topbar-right { gap: 8px !important; }
+  .topbar-location { font-size: 11px !important; padding: 6px 10px !important; }
+
+  .dash-grid {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+
+  .sos-banner {
+    flex-direction: column !important;
+    text-align: center !important;
+    padding: 20px 16px !important;
+    gap: 16px !important;
+  }
+  .sos-center { flex-direction: column !important; align-items: center !important; gap: 14px !important; }
+  .sos-info h3 { font-size: 18px !important; }
+  .sos-info p { font-size: 12px !important; }
+  .sos-loc-card { min-width: unset !important; width: 100% !important; }
+  .sos-big-btn { width: 80px !important; height: 80px !important; }
+  .sos-text { font-size: 16px !important; }
+
+  .ai-checker-card { padding: 16px !important; }
+  .ai-checker-card h3 { font-size: 14px !important; }
+  .ai-checker-card p { font-size: 12px !important; }
+  .ai-check-btn { font-size: 12px !important; padding: 8px 14px !important; }
+
+  .dash-card { padding: 14px !important; }
+  .dash-card-title { font-size: 13px !important; }
+
+  .donor-match-grid { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
+  .donor-match-name { font-size: 12px !important; }
+  .donor-bg-tag { font-size: 10px !important; }
+  .req-btn { font-size: 11px !important; padding: 5px 10px !important; }
+
+  .request-item { padding: 10px !important; }
+  .req-blood { font-size: 12px !important; }
+  .req-hospital { font-size: 11px !important; }
+
+  .impact-stats { grid-template-columns: repeat(3,1fr) !important; gap: 6px !important; }
+  .impact-num { font-size: 18px !important; }
+  .impact-label { font-size: 10px !important; }
+
+  .map-preview { height: 140px !important; }
+
+  .hospital-item { padding: 8px !important; }
+  .hospital-name { font-size: 12px !important; }
+  .hospital-addr { font-size: 11px !important; }
+
+  .quote-banner {
+    flex-direction: column !important;
+    text-align: center !important;
+    padding: 16px !important;
+    gap: 12px !important;
+  }
+  .quote-text { font-size: 12px !important; }
+  .quote-cta { font-size: 12px !important; padding: 8px 18px !important; }
+
+  .toggle-card { gap: 10px !important; }
+  .toggle-info h4 { font-size: 13px !important; }
+  .toggle-info p { font-size: 11px !important; }
+
+  .modal { padding: 20px 16px !important; margin: 16px !important; }
+  .modal-title { font-size: 16px !important; }
+}
