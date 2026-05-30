@@ -1,4 +1,4 @@
-const API_BASE = 'http://127.0.0.1:5000/api';
+const API_BASE = 'https://carepulse-ai-mykj.onrender.com/api';
 
 function getToken() { return localStorage.getItem('token'); }
 function getUser() { const u = localStorage.getItem('user'); return u ? JSON.parse(u) : null; }
