@@ -29,9 +29,11 @@ if db is not None:
     users_collection = db["users"]
     blood_requests_collection = db["blood_requests"]
     donors_collection = db["donors"]
+    donations_collection = db["donations"]
 else:
     users_collection = None
     blood_requests_collection = None
     donors_collection = None
+    donations_collection = None
 
 requests_collection = blood_requests_collection
